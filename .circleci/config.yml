@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/bump
+    docker:
+      - image: circleci/ruby:2.5.3-node
+
+    steps:
+      - checkout
+
+      - type: cache-restore
+        name: Restore bundle cache
+        keys:
+          - bump-bundle-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - bump-bundle-
+
+      - run:
+          name: Install Bump CLI
+          command: bundle install
+
+      - type: cache-save
+        name: Store bundle cache
+        key: bump-bundle-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      - deploy:
+          name: Validate or update bump documentation
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+            else
+              bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+            fi
