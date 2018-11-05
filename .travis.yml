@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 2.5.3
+
+script:
+  - |
+    if [ "${TRAVIS_BRANCH}" == "master" ]; then
+      bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+    else
+      bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+    fi
