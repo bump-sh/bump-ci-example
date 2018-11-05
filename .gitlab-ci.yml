@@ -1,0 +1,23 @@
+image: ruby:2.5.3
+
+stages:
+  - deploy
+
+before_script:
+  - bundle install
+
+validate_doc:
+  stage: deploy
+  script:
+    - bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+  only:
+  - branches
+  except:
+  - master
+
+deploy_doc:
+  stage: deploy
+  script:
+    - bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+  only:
+  - master
