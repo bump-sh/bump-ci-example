@@ -1,0 +1,135 @@
+openapi: "3.0"
+info:
+  title: Bump Api
+  description: >
+    This is the official Bump API documentation. Obviously created with Bump.
+    Note that this is an experimental API on which everything could change.
+  version: "1.0"
+servers:
+  - url: https://bump.sh/api/v1
+x-sections:
+  - title: Authentication
+    content: |
+      ### Api token authentication
+
+      Use the token from your documentation settings as the username of the basic auth, with no password.
+
+      Example: `curl https://bump.sh/api/v1/docs/1/versions -u DOC_TOKEN:`
+
+      Note that adding a colon after your token prevents cURL from asking for a password.
+paths:
+  /docs/{:id}/versions:
+    post:
+      summary: Create a new version
+      description: >
+        Create a new version for a given documentation, which will become the current version.
+      parameters:
+        - $ref: "#/components/parameters/DocumentationId"
+      requestBody:
+        $ref: "#/components/requestBodies/Version"
+      responses:
+        "200":
+          description: "Success"
+        "422":
+          $ref: "#/components/responses/InvalidDefinition"
+  /docs/{:id}/validations:
+    post:
+      summary: Validate a documentation definition
+      description: >
+        Validate a definition against the OpenApi v2.0 schema and return errors without
+        creating a new version. This is useful in a CI process, to validate that a changed
+        definition file is valid and won't fail when being updated on Bump.
+      parameters:
+        - $ref: "#/components/parameters/DocumentationId"
+      requestBody:
+        $ref: "#/components/requestBodies/Version"
+      responses:
+        "200":
+          description: "Success"
+        "422":
+          $ref: "#/components/responses/InvalidDefinition"
+  /previews:
+    post:
+      summary: Create a preview
+      description: >
+        Create a preview for a given documentation file. The preview will have a unique
+        temporary URL, and will be active for 30 minutes.
+      requestBody:
+        $ref: "#/components/requestBodies/Version"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Preview"
+        "422":
+          $ref: "#/components/responses/InvalidDefinition"
+components:
+  parameters:
+    DocumentationId:
+      name: id
+      in: path
+      description: Documentation's id
+      required: true
+      schema:
+        type: string
+  requestBodies:
+    Version:
+      description: The version object
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Version"
+  responses:
+    "InvalidDefinition":
+      description: Definition is not valid.
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      properties:
+        message:
+          type: string
+          description: Human readable error message.
+          example: Invalid definition file
+        errors:
+          type: object
+          description: Hash of invalid attributes with their error messages.
+          example:
+            raw_definition:
+              - The property '#/paths//docs/{:id}/validations/post' contains additional properties ["yolo"] outside of the schema when none are allowed
+    Preview:
+      properties:
+        id:
+          type: string
+          description: "Unique id for the preview URL: `https://bump.sh/preview/:id`."
+          example: 3ef8f52f-9056-4113-840e-2f7183b90e06
+        expires_at:
+          type: string
+          format: date-time
+          description: Preview expiration date and time.
+          example: 2010-04-14T17:05:00+01:00
+    Version:
+      required:
+        - definition
+        - specification
+      properties:
+        definition:
+          type: string
+          description: >
+            Serialized definition of the version. This should be an OpenApi 2.0 (Swagger) file
+            serialized as a string, in YAML or JSON.
+          example: |
+            {swagger: "2.0", "info": { "title: ... }}
+        specification:
+          type: string
+          description: 'Specification for the definition, as a path: `speficiation_name/specification_version/format`. Example: `openapi/v2/yaml`.'
+          enum:
+            - openapi/v2/yaml
+            - openapi/v2/json
+            - openapi/v3/yaml
+            - openapi/v3/json
+          example: openapi/v2/yaml
