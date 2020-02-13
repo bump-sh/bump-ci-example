@@ -1,0 +1,20 @@
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Validate API doc
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Deploy
+      id: deploy
+      uses: scharrier/github-actions@master
+      with:
+        id: ${{ secrets.doc_id }}
+        token: ${{ secrets.doc_token }}
+        file: bump.openapi.v3.yml
+        command: validate
