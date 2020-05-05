@@ -7,10 +7,10 @@ info:
   version: "1.0"
 servers:
   - url: https://bump.sh/api/v1
-x-sections:
+x-topics:
   - title: Authentication
     content: |
-      ### Api token authentication
+      # Api token authentication
 
       Use the token from your documentation settings as the username of the basic auth, with no password.
 
