@@ -1,0 +1,20 @@
+required:
+  - definition
+  - specification
+properties:
+  definition:
+    type: string
+    description: >
+      Serialized definition of the version. This should be an OpenApi 2.0 (Swagger) file
+      serialized as a string, in YAML or JSON.
+    example: |
+      {swagger: "2.0", "info": { "title: ... }}
+  specification:
+    type: string
+    description: 'Specification for the definition, as a path: `speficiation_name/specification_version/format`. Example: `openapi/v2/yaml`.'
+    enum:
+      - openapi/v2/yaml
+      - openapi/v2/json
+      - openapi/v3/yaml
+      - openapi/v3/json
+    example: openapi/v2/yaml

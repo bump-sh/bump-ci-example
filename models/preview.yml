@@ -1,0 +1,10 @@
+properties:
+  id:
+    type: string
+    description: "Unique id for the preview URL: `https://bump.sh/preview/:id`."
+    example: 3ef8f52f-9056-4113-840e-2f7183b90e06
+  expires_at:
+    type: string
+    format: date-time
+    description: Preview expiration date and time.
+    example: 2010-04-14T17:05:00+01:00

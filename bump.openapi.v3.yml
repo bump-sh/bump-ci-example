@@ -62,7 +62,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/Preview"
+                $ref: "models/preview.yml"
         "422":
           $ref: "#/components/responses/InvalidDefinition"
 components:
@@ -80,56 +80,11 @@ components:
       content:
         "application/json":
           schema:
-            $ref: "#/components/schemas/Version"
+            $ref: "models/version.yml"
   responses:
     "InvalidDefinition":
       description: Definition is not valid.
       content:
         "application/json":
           schema:
-            $ref: "#/components/schemas/Error"
-  schemas:
-    Error:
-      properties:
-        message:
-          type: string
-          description: Human readable error message.
-          example: Invalid definition file
-        errors:
-          type: object
-          description: Hash of invalid attributes with their error messages.
-          example:
-            raw_definition:
-              - The property '#/paths//docs/{:id}/validations/post' contains additional properties ["yolo"] outside of the schema when none are allowed
-    Preview:
-      properties:
-        id:
-          type: string
-          description: "Unique id for the preview URL: `https://bump.sh/preview/:id`."
-          example: 3ef8f52f-9056-4113-840e-2f7183b90e06
-        expires_at:
-          type: string
-          format: date-time
-          description: Preview expiration date and time.
-          example: 2010-04-14T17:05:00+01:00
-    Version:
-      required:
-        - definition
-        - specification
-      properties:
-        definition:
-          type: string
-          description: >
-            Serialized definition of the version. This should be an OpenApi 2.0 (Swagger) file
-            serialized as a string, in YAML or JSON.
-          example: |
-            {swagger: "2.0", "info": { "title: ... }}
-        specification:
-          type: string
-          description: 'Specification for the definition, as a path: `speficiation_name/specification_version/format`. Example: `openapi/v2/yaml`.'
-          enum:
-            - openapi/v2/yaml
-            - openapi/v2/json
-            - openapi/v3/yaml
-            - openapi/v3/json
-          example: openapi/v2/yaml
+            $ref: "models/error.yml"
