@@ -29,7 +29,7 @@ jobs:
           name: Validate or update bump documentation
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+              bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml --import-external-references
             else
-              bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+              bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml --import-external-references
             fi

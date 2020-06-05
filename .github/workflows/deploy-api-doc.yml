@@ -16,4 +16,4 @@ jobs:
       with:
         id: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}
-        file: bump.openapi.v3.yml
+        file: bump.openapi.v3.yml --import-external-references

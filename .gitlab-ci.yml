@@ -9,7 +9,7 @@ before_script:
 validate_doc:
   stage: deploy
   script:
-    - bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+    - bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml --import-external-references
   only:
   - branches
   except:
@@ -18,6 +18,6 @@ validate_doc:
 deploy_doc:
   stage: deploy
   script:
-    - bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+    - bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml --import-external-references
   only:
   - master
