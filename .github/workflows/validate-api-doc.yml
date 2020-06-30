@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Deploy
       id: deploy
-      uses: scharrier/github-actions@master
+      uses: moul/github-action@dev/moul/fix-action
       with:
         id: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}
