@@ -14,7 +14,7 @@ jobs:
       id: deploy
       uses: moul/github-action@dev/moul/fix-action
       with:
-        id: ${{ secrets.doc_id }}
+        doc: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}
         file: bump.openapi.v3.yml
         command: validate
