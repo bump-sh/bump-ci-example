@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Deploy
+    - name: Deploy on Bump
       id: deploy
       uses: bump-sh/github-action@rename-id-into-doc
       with:
