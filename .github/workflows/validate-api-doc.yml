@@ -12,9 +12,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Deploy
       id: deploy
-      uses: scharrier/github-actions@master
+      uses: scharrier/github-actions@0.2
       with:
-        id: ${{ secrets.doc_id }}
+        doc: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}
         file: bump.openapi.v3.yml
         command: validate
