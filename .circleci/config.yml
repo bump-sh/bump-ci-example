@@ -1,35 +1,31 @@
-version: 2
+version: '2.1'
+orbs:
+  node: circleci/node@4.4.0
 jobs:
-  build:
-    working_directory: ~/bump
-    docker:
-      - image: circleci/ruby:2.5.3-node
-
+  validate-or-deploy:
+    executor: node/default
     steps:
       - checkout
-
-      - type: cache-restore
-        name: Restore bundle cache
-        keys:
-          - bump-bundle-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - bump-bundle-
-
-      - run:
-          name: Install Bump CLI
-          command: bundle install
-
-      - type: cache-save
-        name: Store bundle cache
-        key: bump-bundle-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-
-      - deploy:
-          name: Validate or update bump documentation
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
-            else
-              bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
-            fi
+      - node/install:
+          install-npm: false
+      - run: npm install -g bump-cli
+      - when:
+          condition:
+            and:
+              - equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - deploy:
+                name: Deploy bump documentation
+                command: npm exec -- bump deploy bump.openapi.v3.yml
+      - unless:
+          condition:
+            and:
+              - equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: Validate documentation
+                command: npm exec -- bump deploy --dry-run bump.openapi.v3.yml
+workflows:
+  bump_workflow:
+    jobs:
+      - validate-or-deploy

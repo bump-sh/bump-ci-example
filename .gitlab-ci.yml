@@ -1,23 +1,32 @@
-image: ruby:2.5.3
+image: node:15
 
 stages:
+  - test
   - deploy
 
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+    - node_modules/
+
 before_script:
-  - bundle install
+  - npm ci --cache .npm --prefer-offline
 
 validate_doc:
-  stage: deploy
+  stage: test
   script:
-    - bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
+    - npm exec -- bump deploy --dry-run bump.openapi.v3.yml
   only:
-  - branches
+    - branches
   except:
-  - master
+    - master
 
 deploy_doc:
   stage: deploy
   script:
-    - bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
+    - npm exec -- bump deploy bump.openapi.v3.yml
   only:
-  - master
+    - master
