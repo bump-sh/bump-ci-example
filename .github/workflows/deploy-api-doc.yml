@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Deploy
       id: deploy
-      uses: scharrier/github-actions@0.2
+      uses: bump-sh/github-action@0.3
       with:
         doc: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}

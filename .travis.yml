@@ -1,11 +1,10 @@
-language: ruby
-rvm:
-  - 2.5.3
+language: node_js
+node_js:
+  - 15
 
-script:
-  - |
-    if [ "${TRAVIS_BRANCH}" == "master" ]; then
-      bundle exec bump deploy bump.openapi.v3.yml --specification openapi/v3/yaml
-    else
-      bundle exec bump validate bump.openapi.v3.yml --specification openapi/v3/yaml
-    fi
+jobs:
+  include:
+    - if: type = pull_request OR branch != master
+      script: npm exec -- bump deploy --dry-run bump.openapi.v3.yml
+    - if: type = push AND branch = master
+      script: npm exec -- bump deploy bump.openapi.v3.yml
