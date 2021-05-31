@@ -4,17 +4,17 @@ on:
       - master
 
 jobs:
-  deploy:
+  dry-run:
     runs-on: ubuntu-latest
-    name: Validate API doc
+    name: Dry-run an API doc deployment
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Deploy
-      id: deploy
-      uses: scharrier/github-actions@0.2
+    - name: Dry-run deployment on bump
+      id: dry-run
+      uses: bump-sh/github-action@0.3
       with:
         doc: ${{ secrets.doc_id }}
         token: ${{ secrets.doc_token }}
         file: bump.openapi.v3.yml
-        command: validate
+        command: dry-run
