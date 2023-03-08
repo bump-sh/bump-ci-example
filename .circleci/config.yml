@@ -1,14 +1,14 @@
-version: '2.1'
+version: "2.1"
 orbs:
-  node: circleci/node@4.4.0
+  node: circleci/node@5.0.2
 jobs:
   validate-or-deploy:
     executor: node/default
     steps:
       - checkout
-      - node/install:
-          install-npm: false
-      - run: npm install -g bump-cli
+      - node/install-packages:
+          pkg-manager: npm
+      - run: npm install bump-cli
       - when:
           condition:
             and:
