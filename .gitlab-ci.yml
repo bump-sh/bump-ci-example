@@ -30,3 +30,12 @@ deploy_doc:
     - npm exec -- bump deploy bump.openapi.v3.yml
   only:
     - master
+
+diff_doc:
+  stage: test
+  script:
+    - ./.gitlab/diff-comment-mr.sh bump.openapi.v3.yml
+  only:
+    - merge_requests
+  except:
+    - master
