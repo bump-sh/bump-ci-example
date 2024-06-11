@@ -5,7 +5,7 @@
 # - 2. The bump slug (`BUMP_ID`)
 # - 3. The Bump token (`BUMP_TOKEN`)
 #
-# Usage: ./diff-comment-mr.sh doc/openapi.yml my-doc my-bump-token-123
+# Usage: ./diff-comment-mr.sh "doc/openapi.yml" "bump_documentation_slug" "bump_token"
 #
 
 bump_preview() {
