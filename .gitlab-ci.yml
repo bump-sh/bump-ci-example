@@ -1,8 +1,18 @@
-image: node:15
+image: node:18
 
 stages:
   - test
   - deploy
+
+# About installation of bump-cli as node package.
+# Script here assume that node package 'bump-cli' has previously beeing installed,
+# and is available in package.json (More information about our CLI: https://github.com/bump-sh/cli)
+
+# You can also let npm install the package itself:
+# In this case, script here can be adapted:
+# - 'cache' and 'before_script' can be removed
+# - remplace every call to 'bump' package by 'bump-cli', for example:
+# - npm exec -- bump-cli deploy --dry-run 'path/to/your/file' for validation
 
 cache:
   key:
@@ -18,24 +28,24 @@ before_script:
 validate_doc:
   stage: test
   script:
-    - npm exec -- bump deploy --dry-run bump.openapi.v3.yml
+    - npm exec -- bump deploy --dry-run "bump.openapi.v3.yml" --doc "$BUMP_ID" --token "$BUMP_TOKEN"
   only:
     - branches
   except:
-    - master
+    - main
 
 deploy_doc:
   stage: deploy
   script:
-    - npm exec -- bump deploy bump.openapi.v3.yml
+    - npm exec -- bump deploy "bump.openapi.v3.yml" --doc "$BUMP_ID" --token "$BUMP_TOKEN"
   only:
-    - master
+    - main
 
 diff_doc:
   stage: test
   script:
-    - ./.gitlab/diff-comment-mr.sh bump.openapi.v3.yml
+    - sh ./.gitlab/diff-comment-mr.sh "bump.openapi.v3.yml" "$BUMP_ID" "$BUMP_TOKEN"
   only:
     - merge_requests
   except:
-    - master
+    - main
