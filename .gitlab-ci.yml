@@ -22,14 +22,14 @@ validate_doc:
   only:
     - branches
   except:
-    - master
+    - main
 
 deploy_doc:
   stage: deploy
   script:
     - npm exec -- bump deploy bump.openapi.v3.yml
   only:
-    - master
+    - main
 
 diff_doc:
   stage: test
@@ -38,4 +38,4 @@ diff_doc:
   only:
     - merge_requests
   except:
-    - master
+    - main
