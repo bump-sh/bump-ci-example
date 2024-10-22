@@ -6,23 +6,39 @@ trigger:
 variables: 
 - group: bumpsh
 
+  # Set to the location of the main OpenAPI document relative to repo root
+- name: openApiDoc
+  value: openapi.yaml
+
+  # The Documentation ID or Slug found in Bump.sh API Settings
+- name: bumpDoc
+  value: azure-demo
+
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
   demands: 
     - npm
 
 jobs:
-  - job: validate_doc
+  - job: openapi_diff
     # Only run this task if build was triggered by a commit to a branch other than main
     condition: and(succeeded(), ne(variables['build.sourceBranch'], 'refs/heads/main'))
     steps:
-      - script: npx bump-cli deploy --dry-run "openapi.yaml" --doc "azure-demo" --token="$BUMP_TOKEN"
-        displayName: 'Validate API'
+      - script: npx bump-cli deploy --dry-run $(openApiDoc) --doc $(bumpDoc) --token="$BUMP_TOKEN"
+        displayName: Validate OpenAPI
 
-  - job: deploy_doc
+      - script: npx bump-cli diff --format markdown $(openApiDoc) --doc $(bumpDoc) --token="$BUMP_TOKEN" > bump-diff.md
+        displayName: Diff OpenAPI
+
+      - task: PullRequestComment@1
+        inputs:
+          markdownFile: $(Build.SourcesDirectory)/bump-diff.md
+        displayName: PR Comment
+
+  - job: openapi_deploy
     # Only run this task if build was triggered by a commit to the main branch
     condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
     steps:
       - script: |
-          npx bump-cli deploy "openapi.yaml" --doc "azure-demo" --token="$BUMP_TOKEN"
-        displayName: 'Deploy API Documentation'
+          npx bump-cli deploy  $(openApiDoc) --doc $(bumpDoc) --token="$BUMP_TOKEN"
+        displayName: Deploy API Documentation
