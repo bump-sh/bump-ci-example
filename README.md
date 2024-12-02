@@ -3,7 +3,7 @@
 CI integration examples for Github Action, Travis CI, CircleCI and Gitlab CI.
 
 <p align="center">
-  <img width="20%" src="https://bump.sh/icon-default-large.png" />
+  <img width="20%" src="https://bump.sh/icon-default-maskable-large.png" />
 </p>
 
 <p align="center">
@@ -39,4 +39,3 @@ The scripts and documentation in this project are released under the [MIT Licens
 ## Code of Conduct
 
 Everyone interacting in the Bump `bump-ci-example` code repository, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/bump-sh/.github/blob/master/CODE_OF_CONDUCT.md).
-
